@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./master.xhtml">
+
+            <ui:define name="top">
+                <h:form id="form2">
+                    <p:growl id="growl"  showDetail="true" sticky="true" /> 
+                </h:form>
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="form1">
+                    <center>
+                        <h2 style="color: blue">ESCOGE</h2>
+                        <p:separator/>
+                        <p:dataTable var="cancion" value="#{comprarMusica.canciones}" widgetVar="cancionTable"
+                                     filteredValue="#{comprarMusica.cancionesFiltradas}" paginator="true" rows="5"> 
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="buscar todos" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('cancionTable').filter()" style="width:150px" placeholder="filtro"/>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column filterBy="#{cancion.nombre}" headerText="nombre"  filterMatchMode="contains">
+                                <h:outputText value="#{cancion.nombre}" />
+                            </p:column>
+                            <p:column filterBy="#{cancion.artista}" headerText="artista"  filterMatchMode="contains">
+                                <h:outputText value="#{cancion.artista}" />
+                            </p:column>
+                            <p:column filterBy="#{cancion.duracion}" headerText="duracion"  filterMatchMode="contains">
+                                <h:outputText value="#{cancion.duracion}" />
+                            </p:column>
+                            <p:column filterBy="#{cancion.album}" headerText="album"  filterMatchMode="contains">
+                                <h:outputText value="#{cancion.album}" />
+                            </p:column>
+                            <p:column filterBy="#{cancion.precio}" headerText="precio"  filterMatchMode="contains">
+                                <h:outputText value="#{cancion.precio}" />
+                            </p:column>
+                            <p:column  headerText="comprar" >
+                                <center>
+                                    <p:commandButton id="comprar" icon="ui-icon-cart" style="width: 80px; height: 30px" actionListener="#{comprarMusica.comprar(cancion)}" update=":form1:tabla :form1:total :form2">
+                                        <f:ajax render="tabla"/>
+                                        <f:ajax render="total"/>
+                                    </p:commandButton>
+                                </center>
+                            </p:column>
+                        </p:dataTable>
+                        <p:separator/>
+                        <h2 style="color: blue">carrito</h2>
+                        <p:dataTable id="tabla" var="compras" value="#{comprarMusica.cancionesCompradas}" 
+                                     paginator="true" rows="8"  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+
+                            <p:column headerText="nombre">
+                                <h:outputText value="#{compras.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="album">
+                                <h:outputText value="#{compras.album}" />
+                            </p:column>
+
+                            <p:column headerText="duracion">
+                                <h:outputText value="#{compras.duracion}" />
+                            </p:column>
+
+                            <p:column headerText="artista">
+                                <h:outputText value="#{compras.artista}" />
+                            </p:column>
+                            <p:column headerText="precio">
+                                <h:outputText value="#{compras.precio}" />
+                            </p:column>
+                             <p:column >
+                            <p:commandButton value="eliminar" icon="ui-icon-trash" actionListener="#{comprarMusica.eliminarCancion(compras)}" update="tabla @form" >
+                                <f:ajax render="tabla"/>
+                            </p:commandButton>
+                        </p:column>
+                        </p:dataTable>
+                        <p:outputLabel id="total" style="color: blue; font-family:monospace ; font-size: xx-large" value="#{comprarMusica.Total()}"/>
+                        <br/>
+                        <p:commandButton value="comprar" action="#{comprarMusica.viewCompra}"/>
+                        <br/><br/>
+             
+                    </center>
+                </h:form>
+            </ui:define>
+
+            <ui:define name="bottom">
+                bottom
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

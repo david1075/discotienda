@@ -1,0 +1,288 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="master.xhtml">
+        <ui:define name="content">
+            <h:form id="form1">
+                <p:growl id="growl"  showDetail="true" sticky="true" life="100"/> 
+                <center>
+                    <h2 style="color: blue"> CREAR ARTISTA</h2>
+                    <table border="1" style="border-color: blue; color: blue" bgcolor="black">
+                        <tr>
+                            <td>
+                                <p:outputLabel value="nombre: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.artista.nombre}"></p:inputText>
+                            </td>
+                            <td>
+                                <p:outputLabel value="genero: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.artista.genero}"></p:inputText>
+                            </td>
+                         
+                            <td>
+                                <p:commandButton id="crearArtista" value="crear " actionListener="#{crearMusica.agregarArtista()}" 
+                                                 update="tableartistas @form :form1:menuArtiAlbum :form1:menuArtiCancion">
+                                    <f:ajax render="tableartistas"/>
+                                    <f:ajax render="menuArtiAlbum"/>
+                                    <f:ajax render="menuArtiCancion"/>
+                                </p:commandButton>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+                <p:separator/>
+                <center>
+                    <h2 style="color: blue"> CREAR ALBUM</h2>
+                    <table border="1" style="border-color: blue; color: blue" bgcolor="black">
+                        <tr>
+                            <td>
+                                <p:outputLabel value="nombre album: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.album.nombre}"></p:inputText>
+                            </td>
+                             <td>
+                                <p:outputLabel value="año album: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:calendar id="germanV2" value="#{crearMusica.album.año}" locale="de" navigator="true" pattern="dd.MM.yyyy" />
+                
+                            </td>
+                            <td>
+                                <p:outputLabel value="genero album: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.album.genero}"></p:inputText>
+                            </td>
+                            <td>
+                                <p:outputLabel value="precio album: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.album.precio}"></p:inputText>
+                            </td>
+                            <td>
+                                <p:outputLabel value="Artista: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:selectOneMenu id="menuArtiAlbum" value="#{crearMusica.album.artista}" >
+                                    <f:selectItems value="#{crearMusica.listaNomArti}"/>
+                                </p:selectOneMenu>
+                            </td>
+                            <td>
+                                <p:commandButton id="crearAlbum" value="crear" actionListener="#{crearMusica.agregarAlbum()}" 
+                                                 update="tablealbum @form :form1:menuCancAlbum">
+                                    <f:ajax render="tablealbum"/>
+                                    <f:ajax render="menuCancAlbum"/>
+                                </p:commandButton>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+                <p:separator/>
+                <center>
+                    <h2 style="color: blue"> CREAR CANCION</h2>
+                    <table border="1" style="border-color: blue; color: blue" bgcolor="black">
+                        <tr>
+                            <td>
+                                <p:outputLabel value="nombre: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.cancion.nombre}"></p:inputText>
+                            </td>
+                            <td>
+                                <p:outputLabel value="album: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:selectOneMenu id="menuCancAlbum" value="#{crearMusica.cancion.album}" >
+                                    <f:selectItems value="#{crearMusica.listaNomAlbu}"/>
+                                </p:selectOneMenu>
+                            </td>
+                            <td>
+                                <p:outputLabel value="duracion: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.cancion.duracion}"></p:inputText>
+                            </td>
+                            <td>
+                                <p:outputLabel value="artista: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:selectOneMenu id="menuArtiCancion" value="#{crearMusica.cancion.artista}" >
+                                    <f:selectItems value="#{crearMusica.listaNomArti}"/>
+                                </p:selectOneMenu>
+                            </td>
+                            <td>
+                                <p:outputLabel value="precio: "></p:outputLabel>
+                            </td>
+                            <td>
+                                <p:inputText value="#{crearMusica.cancion.precio}"></p:inputText>
+                            </td>
+
+                            <td>
+                                <p:commandButton id="crearCancion" value="crear: " actionListener="#{crearMusica.agregarCancion()}" update="tablecanciones @form">
+                                    <f:ajax render="tablecanciones"/>
+                                </p:commandButton>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+                <p:separator/>
+                <center> 
+                    <h2 style="color: blue"> LISTA ARTISTAS</h2>
+                    <p:dataTable id="tableartistas" var="arti" editable="true" value="#{crearMusica.artistas}"
+                                 paginator="true" rows="5">
+                        <p:ajax event="rowEdit" listener="#{crearMusica.editarArtista(event)}" />
+                        <p:column headerText="nombre">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{arti.nombre}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{arti.nombre}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="genero">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{arti.genero}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{arti.genero}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column >
+                            <p:commandButton value="eliminar" icon="ui-icon-trash" actionListener="#{crearMusica.eliminarArtista(arti)}" 
+                                             update="tableartistas @form :form1:menuArtiAlbum :form1:menuArtiCancion" >
+                                <f:ajax render="tableartistas"/>
+                                <f:ajax render="menuArtiAlbum"/>
+                                <f:ajax render="menuArtiCancion"/>
+                            </p:commandButton>
+                        </p:column>
+                        <p:column style="width:35px">
+                            <p:rowEditor  />
+                        </p:column>
+                    </p:dataTable>
+                </center>
+                <p:separator/>
+                <center>
+                    <h2 style="color: blue"> LISTA ALBUMES</h2>
+                    <p:dataTable id="tablealbum" var="albu" editable="true" value="#{crearMusica.albumes}"
+                                 paginator="true" rows="5">
+                        <p:ajax event="rowEdit" listener="#{crearMusica.editarAlbum(event)}" />
+                        <p:column headerText="nombre album">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{albu.nombre}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{albu.nombre}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="genero">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{albu.genero}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{albu.genero}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="año">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{albu.año}" /></f:facet>
+                                <f:facet name="input"><p:calendar id="calendar" value="#{albu.año}" locale="de" navigator="true" pattern="dd.MM.yyyy" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="artista">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{albu.artista}" /></f:facet>
+                                   <f:facet name="input">
+                                    <p:selectOneMenu value="#{albu.artista}">
+                                        <f:selectItems value="#{crearMusica.listaNomArti}"/>
+                                    </p:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                         <p:column headerText="precio">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{albu.precio}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{albu.precio}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                         
+                        <p:column >
+                            <p:commandButton value="eliminar" icon="ui-icon-trash" actionListener="#{crearMusica.eliminarAlbum(albu)}" 
+                                             update="tablealbum @form :form1:menuCancAlbum" >
+                                <f:ajax render="tablealbum"/>
+                                <f:ajax render="menuCancAlbum"/>
+                            </p:commandButton>
+                        </p:column>
+                        <p:column style="width:35px">
+                            <p:rowEditor  />
+                        </p:column>
+                    </p:dataTable>
+                </center>
+                <p:separator/>
+                <center>
+                    <h2 style="color: blue"> LISTA CANCIONES</h2>
+                    <p:dataTable id="tablecanciones" var="canc" editable="true" value="#{crearMusica.canciones}"
+                                 paginator="true" rows="5">
+                        <p:ajax event="rowEdit" listener="#{crearMusica.editarCancion(event)}" />
+                        <p:column headerText="nombre">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{canc.nombre}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{canc.nombre}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="album">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{canc.album}" /></f:facet>
+                                <f:facet name="input">
+                                    <p:selectOneMenu value="#{canc.album}">
+                                        <f:selectItems value="#{crearMusica.listaNomAlbu}"/>
+                                    </p:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                            
+                        </p:column>
+
+                        <p:column headerText="duracion">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{canc.duracion}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{canc.duracion}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="artista">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{canc.artista}" /></f:facet>
+                                <f:facet name="input">
+                                    <p:selectOneMenu value="#{canc.artista}">
+                                        <f:selectItems value="#{crearMusica.listaNomArti}"/>
+                                    </p:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="precio">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{canc.precio}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{canc.precio}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column >
+                            <p:commandButton value="eliminar" icon="ui-icon-trash" actionListener="#{crearMusica.eliminarCancion(canc)}" update="tablecanciones @form" >
+                                <f:ajax render="tablecanciones"/>
+                            </p:commandButton>
+                        </p:column>
+                        <p:column style="width:35px">
+                            <p:rowEditor  />
+                        </p:column>
+                    </p:dataTable>
+                </center>
+            </h:form>
+        </ui:define>
+
+    </ui:composition>
+
+</html>
+
